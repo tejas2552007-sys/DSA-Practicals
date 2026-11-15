@@ -1,0 +1,117 @@
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+
+struct Student
+{
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+int main()
+{
+    Student *s = NULL;
+    int n, newN, choice;
+
+    cout << "Enter number of students: ";
+    cin >> n;
+
+    // Dynamic memory allocation
+    s = (Student*)malloc(n * sizeof(Student));
+
+    // Input student details
+    for (int i = 0; i < n; i++)
+    {
+        cout << "\nEnter Student Details";
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    // Expand memory using realloc
+    cout << "\nEnter additional students: ";
+    cin >> newN;
+
+    s = (Student*)realloc(s, (n + newN) * sizeof(Student));
+
+    // Add new students
+    for (int i = n; i < n + newN; i++)
+    {
+        cout << "\nEnter Student Details";
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    n = n + newN;
+
+    // Sorting choice
+    cout << "\n1. Sort by Name";
+    cout << "\n2. Sort by CGPA Ascending";
+    cout << "\n3. Sort by CGPA Descending";
+    cout << "\nEnter your choice: ";
+    cin >> choice;
+
+    // Insertion Sort
+    for (int i = 1; i < n; i++)
+    {
+        Student key = s[i];
+        int j = i - 1;
+
+        if (choice == 1)
+        {
+            while (j >= 0 && strcmp(s[j].name, key.name) > 0)
+            {
+                s[j + 1] = s[j];
+                j--;
+            }
+        }
+        else if (choice == 2)
+        {
+            while (j >= 0 && s[j].cgpa > key.cgpa)
+            {
+                s[j + 1] = s[j];
+                j--;
+            }
+        }
+        else if (choice == 3)
+        {
+            while (j >= 0 && s[j].cgpa < key.cgpa)
+            {
+                s[j + 1] = s[j];
+                j--;
+            }
+        }
+
+        s[j + 1] = key;
+    }
+
+    // Display sorted records
+    cout << "\nSorted Student Records";
+    cout << "\nID\tName\tCGPA\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << s[i].id << "\t";
+        cout << s[i].name << "\t";
+        cout << s[i].cgpa << endl;
+    }
+
+    // Free memory
+    free(s);
+
+    return 0;
+}
