@@ -1,0 +1,140 @@
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+
+struct Student
+{
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+int main()
+{
+    Student *s = NULL;
+    int n, searchId;
+
+    cout << "Enter number of students: ";
+    cin >> n;
+
+    // Dynamic memory allocation
+    s = (Student*)malloc(n * sizeof(Student));
+
+    // Input student details
+    for (int i = 0; i < n; i++)
+    {
+        cout << "\nEnter Student " << i + 1 << " Details";
+        
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    // Expand memory using realloc()
+    int newN;
+
+    cout << "\nEnter additional students: ";
+    cin >> newN;
+
+    s = (Student*)realloc(s, (n + newN) * sizeof(Student));
+
+    // Add new student details
+    for (int i = n; i < n + newN; i++)
+    {
+        cout << "\nEnter Student " << i + 1 << " Details";
+
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    n = n + newN;
+
+    // Linear Search
+    cout << "\nEnter ID for Linear Search: ";
+    cin >> searchId;
+
+    bool found = false;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i].id == searchId)
+        {
+            cout << "\nStudent Found!";
+            cout << "\nID: " << s[i].id;
+            cout << "\nName: " << s[i].name;
+            cout << "\nCGPA: " << s[i].cgpa;
+
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+        cout << "\nStudent Not Found!";
+
+    // Sort students by ID
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (s[i].id > s[j].id)
+            {
+                Student temp = s[i];
+                s[i] = s[j];
+                s[j] = temp;
+            }
+        }
+    }
+
+    // Binary Search
+    cout << "\n\nEnter ID for Binary Search: ";
+    cin >> searchId;
+
+    int low = 0, high = n - 1, mid;
+    found = false;
+
+    while (low <= high)
+    {
+        mid = (low + high) / 2;
+
+        if (s[mid].id == searchId)
+        {
+            cout << "\nStudent Found!";
+            cout << "\nID: " << s[mid].id;
+            cout << "\nName: " << s[mid].name;
+            cout << "\nCGPA: " << s[mid].cgpa;
+
+            found = true;
+            break;
+        }
+        else if (searchId < s[mid].id)
+        {
+            high = mid - 1;
+        }
+        else
+        {
+            low = mid + 1;
+        }
+    }
+
+    if (!found)
+        cout << "\nStudent Not Found!";
+
+    // Free memory
+    free(s);
+
+    return 0;
+}
