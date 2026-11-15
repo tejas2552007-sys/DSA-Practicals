@@ -1,0 +1,102 @@
+
+# Class to represent Graph
+class Graph:
+
+    # Constructor
+    def __init__(self, vertices):
+        self.V = vertices
+        self.edges = []
+
+    # Function to add an edge
+    def add_edge(self, u, v, w):
+        self.edges.append([u, v, w])
+
+    # Function to find parent of a vertex
+    def find_parent(self, parent, node):
+
+        if parent[node] == node:
+            return node
+
+        return self.find_parent(parent, parent[node])
+
+    # Function to join two sets
+    def union(self, parent, x, y):
+
+        x_parent = self.find_parent(parent, x)
+        y_parent = self.find_parent(parent, y)
+
+        parent[y_parent] = x_parent
+
+    # Function to find Minimum Spanning Tree
+    def kruskal_mst(self):
+
+        # Sort edges according to weight
+        self.edges.sort(key=lambda edge: edge[2])
+
+        # List to store MST edges
+        mst = []
+
+        # Create parent array
+        parent = []
+
+        # Initially every vertex is its own parent
+        for i in range(self.V):
+            parent.append(i)
+
+        # Check all edges one by one
+        for edge in self.edges:
+
+            u = edge[0]
+            v = edge[1]
+            w = edge[2]
+
+            parent_u = self.find_parent(parent, u)
+            parent_v = self.find_parent(parent, v)
+
+            # If they belong to different sets
+            if parent_u != parent_v:
+
+                # Add edge to MST
+                mst.append(edge)
+
+                # Join the sets
+                self.union(parent, parent_u, parent_v)
+
+                if len(mst) == self.V - 1:
+                    break
+
+        # Display MST
+        print("\nMinimum Spanning Tree Edges:")
+
+        total_cost = 0
+
+        for u, v, w in mst:
+            print(u, "--", v, "=", w)
+            total_cost = total_cost + w
+
+        print("\nTotal Cost of MST =", total_cost)
+
+
+# Main Program
+
+# Department Numbers
+# 0 = Main Gate
+# 1 = Computer Department
+# 2 = IT Department
+# 3 = Library
+# 4 = Hostel
+
+# Create graph with 5 nodes
+g = Graph(5)
+
+# Add edges (distance between locations)
+g.add_edge(0, 1, 10)
+g.add_edge(0, 2, 8)
+g.add_edge(1, 2, 5)
+g.add_edge(1, 3, 3)
+g.add_edge(2, 3, 7)
+g.add_edge(2, 4, 6)
+g.add_edge(3, 4, 4)
+
+# Run Kruskal's Algorithm
+g.kruskal_mst()
