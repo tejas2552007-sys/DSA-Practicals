@@ -1,0 +1,113 @@
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+using namespace std;
+
+struct Student
+{
+    int id;
+    char name[50];
+    float cgpa;
+};
+
+int main()
+{
+    Student *s = NULL;
+    int n, newN, choice;
+
+    cout << "Enter number of students: ";
+    cin >> n;
+
+    // Dynamic memory allocation
+    s = (Student*)malloc(n * sizeof(Student));
+
+    // Input student details
+    for (int i = 0; i < n; i++)
+    {
+        cout << "\nEnter Student Details";
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    // Expand memory using realloc
+    cout << "\nEnter additional students: ";
+    cin >> newN;
+
+    s = (Student*)realloc(s, (n + newN) * sizeof(Student));
+
+    // Add new students
+    for (int i = n; i < n + newN; i++)
+    {
+        cout << "\nEnter Student Details";
+        cout << "\nEnter ID: ";
+        cin >> s[i].id;
+
+        cout << "Enter Name: ";
+        cin >> s[i].name;
+
+        cout << "Enter CGPA: ";
+        cin >> s[i].cgpa;
+    }
+
+    n = n + newN;
+
+    // Sorting choice
+    cout << "\n1. Sort by Name";
+    cout << "\n2. Sort by CGPA Ascending";
+    cout << "\n3. Sort by CGPA Descending";
+    cout << "\nEnter your choice: ";
+    cin >> choice;
+
+    // Selection Sort
+    for (int i = 0; i < n - 1; i++)
+    {
+        int minIndex = i;
+
+        for (int j = i + 1; j < n; j++)
+        {
+            if (choice == 1)
+            {
+                if (strcmp(s[j].name, s[minIndex].name) < 0)
+                    minIndex = j;
+            }
+            else if (choice == 2)
+            {
+                if (s[j].cgpa < s[minIndex].cgpa)
+                    minIndex = j;
+            }
+            else if (choice == 3)
+            {
+                if (s[j].cgpa > s[minIndex].cgpa)
+                    minIndex = j;
+            }
+        }
+
+        // Swap records
+        Student temp = s[i];
+        s[i] = s[minIndex];
+        s[minIndex] = temp;
+    }
+
+    // Display sorted records
+    cout << "\nSorted Student Records";
+    cout << "\nID\tName\tCGPA\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cout << s[i].id << "\t";
+        cout << s[i].name << "\t";
+        cout << s[i].cgpa << endl;
+    }
+
+    // Free memory
+    free(s);
+
+    return 0;
+}
